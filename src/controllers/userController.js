@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import ms from 'ms'
-import { JwtProvider } from '~/providers/JwtProvider'
+import { JwtProvider, ACCESS_TOKEN_SECRET_SIGNATURE, REFRESH_TOKEN_SECRET_SIGNATURE } from '~/providers/JwtProvider'
 
 const MOCK_DATABASE = {
   USER: {
@@ -15,8 +15,7 @@ const MOCK_DATABASE = {
  * Lưu ý phải lưu vào biến môi trường ENV trong thực tế cho bảo mật.
  * Ở đây mình làm Demo thôi nên mới đặt biến const và giá trị random ngẫu nhiên trong code nhé.
  */
-const ACCESS_TOKEN_SECRET_SIGNATURE = 'KBgJwUETt4HeVD05WaXXI9V3JnwCVP'
-const REFRESH_TOKEN_SECRET_SIGNATURE = 'fcCjhnpeopVn2Hg1jG75MUi62051yL'
+
 
 const login = async (req, res) => {
   try {
