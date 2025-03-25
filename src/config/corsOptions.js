@@ -7,9 +7,9 @@ export const corsOptions = {
     return callback(null, true)
   },
 
-  // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  // ✅ Đảm bảo phản hồi không bị lỗi trên trình duyệt cũ
   optionsSuccessStatus: 200,
 
   // CORS sẽ cho phép nhận cookies từ request
-  // credentials: true
+  credentials: true
 }

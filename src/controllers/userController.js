@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import ms from 'ms'
+import { JwtProvider } from '~/providers/JwtProvider'
 
 const MOCK_DATABASE = {
   USER: {
@@ -25,8 +26,43 @@ const login = async (req, res) => {
     }
 
     // Trường hợp nhập đúng thông tin tài khoản, tạo token và trả về cho phía Client
+    //Tạo thông tin cho payload gửi về cho client
+    const userInfo = {
+      id: MOCK_DATABASE.USER.ID,
+      email: MOCK_DATABASE.USER.EMAIL
+    }
+    //tạo access token gửi về cho client
+    const accessToken = await JwtProvider.generateToken(userInfo, ACCESS_TOKEN_SECRET_SIGNATURE, '1h')
+    //tạo refresh token gửi về cho client
+    const refreshToken = await JwtProvider.generateToken(userInfo, REFRESH_TOKEN_SECRET_SIGNATURE, '14 days')
+    //set lại cookie cho client
+    res.cookie(
+      'accessToken',
+      accessToken.toString(),
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: ms('14 days')
+      }
+    )
+    res.cookie(
+      'refreshToken',
+      refreshToken.toString(),
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: ms('14 days')
+      }
+    )
 
-    res.status(StatusCodes.OK).json({ message: 'Login API success!' })
+    // //trả về kqua cho client
+    res.status(StatusCodes.OK).json({
+      ...userInfo,
+      accessToken,
+      refreshToken
+    })
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
   }
