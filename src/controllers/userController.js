@@ -81,10 +81,36 @@ const logout = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    // Do something
-    res.status(StatusCodes.OK).json({ message: ' Refresh Token API success.' })
+    //cách 1 lấy token từ req nếu lưu bằng cookie
+    //const refreshToken = req.cookies?.refreshToken
+    // cách 2 lấy token ra nếu lưu từ localStorage
+    //lưu ý với refreshToken thì FE sẽ gửi từ body lên cho BE
+    const refreshToken = req.body?.refreshToken
+    const verifyToken = await JwtProvider.verifyToken(refreshToken, REFRESH_TOKEN_SECRET_SIGNATURE)
+    //tạo lại payload để tạo accessToken
+    const userInfo = {
+      id: verifyToken.id,
+      email: verifyToken.email
+    }
+    //tạo access token gửi về cho client
+    const accessToken = await JwtProvider.generateToken(userInfo, ACCESS_TOKEN_SECRET_SIGNATURE, '5')
+    //set lại cookie cho client
+    res.cookie(
+      'accessToken',
+      accessToken,
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: ms('14 days')
+      }
+    )
+    res.status(StatusCodes.OK).json({
+      message: ' Access Token genarate again',
+      accessToken
+    })
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Please Login again' })
   }
 }
 

@@ -47,7 +47,7 @@ const isAuthorized = async (req, res, next) => {
       return
     }
     //Đương nhiên cuối cùng sẽ rơi vào trường hợp token so sánh ko đúng
-    res.status(StatusCodes.UNAUTHORIZED).json({ message: 'UNAUTHORIZED!' })
+    res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Please Login!' })
   }
 }
 
