@@ -25,16 +25,16 @@ const isAuthorized = async (req, res, next) => {
   //Th3:token đúng
   try {
     //cách 1 verify token từ cookie
-    //const verifyAccessTokenCookie = await JwtProvider.verifyToken(accessTokenFromCookie, ACCESS_TOKEN_SECRET_SIGNATURE)
+    const verifyAccessTokenCookie = await JwtProvider.verifyToken(accessTokenFromCookie, ACCESS_TOKEN_SECRET_SIGNATURE)
 
     //cách 2 verify token từ header
-    const verifyAccessTokenHeader = await JwtProvider.verifyToken(accessTokenFromHeader, ACCESS_TOKEN_SECRET_SIGNATURE)
+    //const verifyAccessTokenHeader = await JwtProvider.verifyToken(accessTokenFromHeader, ACCESS_TOKEN_SECRET_SIGNATURE)
 
     //gắn payload vào req để khi đi đến các tầng sau như Controller có thể sử dụng
     //đối với cookie
-    //req.jwtDecoded = verifyAccessTokenCookie
+    req.jwtDecoded = verifyAccessTokenCookie
     //đối với header
-    req.jwtDecoded = verifyAccessTokenHeader
+    //req.jwtDecoded = verifyAccessTokenHeader
 
     //Khi gắn xong vào req thì đẩy nó qua tầng tiếp theo là COntroller để xử lý
     next()

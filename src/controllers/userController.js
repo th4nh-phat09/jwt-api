@@ -69,7 +69,10 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    // Do something
+    //Nếu token lưu ở cookie thì khi gọi lên api này thì phải clear cookie này lại cho client
+    //để client set lại cookie
+    res.clearCookie('accessToken')
+    res.clearCookie('refreshToken')
     res.status(StatusCodes.OK).json({ message: 'Logout API success!' })
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
